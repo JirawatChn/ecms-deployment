@@ -35,10 +35,12 @@ pipeline {
 
         stage('Run EMP Test') {
             steps {
-                dir('test') {
-                    bat "pip install robotframework"
-                    bat "pip install robotframework-seleniumlibrary"
-                    bat "robot -d reports/emp emp-ecms.robot"
+             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    dir('test') {
+                        bat "pip install robotframework"
+                        bat "pip install robotframework-seleniumlibrary"
+                        bat "robot -d reports/emp emp-ecms.robot"
+                    }
                 }
             }
             post {
@@ -56,8 +58,10 @@ pipeline {
 
         stage('Run HR Test') {
             steps {
-                dir('test') {
-                    bat "robot -d reports/hr hr-ecms.robot"
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    dir('test') {
+                        bat "robot -d reports/hr hr-ecms.robot"
+                    }
                 }
             }
             post {
@@ -69,7 +73,7 @@ pipeline {
                         keepAll: true,
                         alwaysLinkToLastBuild: true
                     ])
-                }
+             }
             }
         }
     }
