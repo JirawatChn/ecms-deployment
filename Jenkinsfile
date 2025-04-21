@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Clone Test Repo') {
+        stage('Clone Test') {
             steps {
                 dir('test') {
                     git url: 'https://github.com/JirawatChn/ecms-autotest.git', branch: 'main', credentialsId: 'jirawatchn'
