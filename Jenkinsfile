@@ -33,6 +33,29 @@ pipeline {
             }
         }
 
+        stage('Run Previews') {
+            steps {
+             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    dir('test') {
+                        bat "pip install robotframework"
+                        bat "pip install robotframework-seleniumlibrary"
+                        bat "robot -d reports/previews previews.robot"
+                    }
+                }
+            }
+            post {
+                always {
+                    publishHTML(target: [
+                        reportDir: 'test/reports/previews',
+                        reportFiles: 'report.html',
+                        reportName: 'Previews Test Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
+                }
+            }
+        }
+
         stage('Run EMP Test') {
             steps {
              catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
